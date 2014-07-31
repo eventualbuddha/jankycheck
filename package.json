@@ -1,0 +1,15 @@
+{
+  "name": "jankycheck",
+  "version": "0.0.0",
+  "description": "janky quickcheck for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Donovan",
+  "license": "MIT",
+  "dependencies": {
+    "gentest": "git://github.com/graue/gentest.git",
+    "shrinker": "^0.1.0"
+  }
+}

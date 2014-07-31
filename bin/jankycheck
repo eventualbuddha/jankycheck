@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+/* jshint node:true, undef:true, unused:true */
+
+var Path = require('path');
+var run = require('..').run;
+var FailureError = require('..').FailureError;
+
+/**
+ * Run the modules given by argv.
+ *
+ * @param {string[]} argv a list of module paths
+ */
+function main(argv) {
+  var passed = [];
+  var failed = [];
+
+  argv.forEach(function(arg) {
+    checkModule(require(Path.join(process.cwd(), arg)), function(prop, result) {
+      if (result) {
+        passed.push(prop);
+      } else {
+        failed.push(prop);
+      }
+    });
+  });
+
+  console.log();
+  console.log(
+    '%d total, %d passed, %d failed.',
+    passed.length + failed.length,
+    passed.length,
+    failed.length
+  );
+
+  process.exit(failed.length ? 1 : 0);
+}
+
+/**
+ * Checks the given module's properties.
+ *
+ * @param {Module} mod
+ * @param {function(function, boolean)} callback called for each property
+ */
+function checkModule(mod, callback) {
+  for (var exp in mod) {
+    if ({}.hasOwnProperty.call(mod, exp)) {
+      if (exp.lastIndexOf('prop_', 0) === 0) {
+        var prop = mod[exp];
+        if (checkProperty(exp, prop, prop.generators || [])) {
+          callback(prop, true);
+        } else {
+          callback(prop, false);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Checks the given named property with the given generators.
+ *
+ * @param {string} name
+ * @param {function(...[*]): boolean} prop
+ * @param {function[]} generators
+ * @return {boolean}
+ */
+function checkProperty(name, prop, generators) {
+  try {
+    run.apply(null, [prop].concat(generators));
+    handleSuccess(name, prop);
+    return true;
+  } catch (ex) {
+    if (ex instanceof FailureError) {
+      handleFailure(name, prop, ex);
+    } else {
+      handleException(name, prop, ex);
+    }
+    return false;
+  }
+}
+
+/**
+ * Handles the failure of the given property.
+ *
+ * @param {string} name
+ * @param {function(...[*]): boolean} prop
+ * @param {FailureError} failure
+ */
+function handleFailure(name, prop, failure) {
+  console.log('✘ ' + name);
+  console.log();
+  console.log('  Failed with test case:', failure.originalTestCase);
+  if (failure.shrinks > 0) {
+    console.log(
+      '  Shrunk after',
+      failure.shrinks,
+      failure.shrinks === 1 ? 'iteration' : 'iterations',
+      'to',
+      failure.testCase
+    );
+  }
+  console.log();
+}
+
+/**
+ * Handles an exception thrown while running the property check.
+ *
+ * @param {string} name
+ * @param {function(...[*]): boolean} prop
+ * @param {Error} exception
+ */
+function handleException(name, prop, exception) {
+  console.log('✘ ' + name);
+  console.log();
+  console.log(exception);
+  console.log();
+}
+
+/**
+ * Handles success of the named property.
+ *
+ * @param {string} name
+ */
+function handleSuccess(name) {
+  console.log('✓ ' + name);
+}
+
+main(process.argv.slice(2));
