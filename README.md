@@ -78,8 +78,8 @@ exports.prop_powWorks = prop_powWorks;
 $ jankycheck myprops.js
   ✘ prop_powWorks
 
-    Failed with test case: [ -1, -1 ]
-    Shrunk after 2 iterations to [ 0, 1 ]
+    Failed with test case: prop_powWorks(-1, -1)
+    Shrunk after 2 iterations to prop_powWorks(0, 1)
 
 
   1 total, 0 passed, 1 failed.
@@ -108,8 +108,8 @@ Looks better! Let's try again.
 $ jankycheck myprops.js
   ✘ prop_powWorks
 
-    Failed with test case: [ 0, -1 ]
-    Shrunk after 1 iteration to [ 0, 0 ]
+    Failed with test case: prop_powWorks(0, -1)
+    Shrunk after 1 iteration to prop_powWorks(0, 0)
 
 
   1 total, 0 passed, 1 failed.
@@ -141,8 +141,8 @@ Okay, that should fix the zero exponent case.
 $ jankycheck myprops.js
 ✘ prop_powWorks
 
-  Failed with test case: [ -3, 3 ]
-  Shrunk after 4 iterations to [ 2, 1 ]
+  Failed with test case: prop_powWorks(-3, 3)
+  Shrunk after 4 iterations to prop_powWorks(2, 1)
 
 
 1 total, 0 passed, 1 failed.
@@ -174,8 +174,8 @@ Let's see what that did…
 $ jankycheck myprops.js
 ✘ prop_powWorks
 
-  Failed with test case: [ 4, -2 ]
-  Shrunk after 2 iterations to [ 0, -1 ]
+  Failed with test case: prop_powWorks(4, -2)
+  Shrunk after 2 iterations to prop_powWorks(0, -1)
 
 
 1 total, 0 passed, 1 failed.

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* jshint node:true, undef:true, unused:true */
 
+var util = require('util');
 var Path = require('path');
 var run = require('..').run;
 var FailureError = require('..').FailureError;
@@ -89,14 +90,14 @@ function checkProperty(name, prop, generators) {
 function handleFailure(name, prop, failure) {
   console.log('✘ ' + name);
   console.log();
-  console.log('  Failed with test case:', failure.originalTestCase);
+  console.log('  Failed with test case:', inspectTestCase(name, failure.originalTestCase));
   if (failure.shrinks > 0) {
     console.log(
       '  Shrunk after',
       failure.shrinks,
       failure.shrinks === 1 ? 'iteration' : 'iterations',
       'to',
-      failure.testCase
+      inspectTestCase(name, failure.testCase)
     );
   }
   console.log();
@@ -123,6 +124,17 @@ function handleException(name, prop, exception) {
  */
 function handleSuccess(name) {
   console.log('✓ ' + name);
+}
+
+/**
+ * Make a human-readable string for a failing test case.
+ *
+ * @param {string} name
+ * @param {*[]} testCase
+ * @return {string}
+ */
+function inspectTestCase(name, testCase) {
+  return name + '(' + testCase.map(util.inspect).join(', ') + ')';
 }
 
 main(process.argv.slice(2));
