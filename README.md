@@ -10,10 +10,10 @@ well. I mean, really, didn't you see the name?
 ### Install
 
 ```
-$ npm install -g git://github.com/eventualbuddha/jankycheck.git
+$ npm install -g jankycheck
 ```
 
-You don't have to install it globally, it's just easier that way.
+You don't have to install it globally, it's just easier to test it out that way.
 
 ### Write some properties
 
