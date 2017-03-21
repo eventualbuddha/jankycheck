@@ -1,5 +1,7 @@
 # jankycheck
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/eventualbuddha/jankycheck.svg)](https://greenkeeper.io/)
+
 ## Do not use this
 
 At least don't use it for anything real. I make no promises about it working
